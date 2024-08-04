@@ -64,29 +64,45 @@
     </section>
 
     <section class="call-to-action">
-      <h1>Quer saber mais sobre nossos produtos e serviços?</h1>
-      <router-link
-        to="/produtos"
-        class="cta-link"
-      >Conheça nossos produtos</router-link>
+      <div>
+        <h1>Quer saber mais sobre nossos produtos e serviços?</h1>
+        <router-link
+          to="/produtos"
+          class="cta-link"
+        >
+          Conheça nossos produtos
+        </router-link>
+      </div>
 
-      <h1>Quer agendar um horário para o seu pet?</h1>
-      <router-link
-        to="/agendamento"
-        class="cta-link"
-      >Agende agora</router-link>
+      <div>
+        <h1>Quer agendar um horário para o seu pet?</h1>
+        <router-link
+          to="/agendamento"
+          class="cta-link"
+        >
+          Agende agora
+        </router-link>
+      </div>
 
-      <h1>Quer criar uma conta e ficar por dentro de tudo?</h1>
-      <router-link
-        to="/cadastro"
-        class="cta-link"
-      >Crie sua conta</router-link>
+      <div>
+        <h1>Quer criar uma conta e ficar por dentro de tudo?</h1>
+        <router-link
+          to="/cadastro"
+          class="cta-link"
+        >
+          Crie sua conta
+        </router-link>
+      </div>
 
-      <h1>Já tem cadastro? Faça login</h1>
-      <router-link
-        to="/login"
-        class="cta-link"
-      >Faça login</router-link>
+      <div>
+        <h1>Já tem cadastro? Faça login</h1>
+        <router-link
+          to="/login"
+          class="cta-link"
+        >
+          Faça login
+        </router-link>
+      </div>
     </section>
   </div>
 </template>
@@ -176,6 +192,9 @@ ul li strong {
 }
 
 .call-to-action {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
   background-color: #f5f5f5;
   padding: 20px;
   border-radius: 10px;
@@ -190,7 +209,6 @@ ul li strong {
   color: white;
   text-decoration: none;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
 }
 
 .cta-link:hover {
