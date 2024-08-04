@@ -65,43 +65,47 @@
 
     <section class="call-to-action">
       <div>
-        <h1>Quer saber mais sobre nossos produtos e serviços?</h1>
-        <router-link
-          to="/produtos"
-          class="cta-link"
-        >
-          Conheça nossos produtos
-        </router-link>
+        <div>
+          <h1>Quer saber mais sobre nossos produtos e serviços?</h1>
+          <router-link
+            to="/produtos"
+            class="cta-link"
+          >
+            Conheça nossos produtos
+          </router-link>
+        </div>
+
+        <div>
+          <h1>Quer criar uma conta e ficar por dentro de tudo?</h1>
+          <router-link
+            to="/cadastro"
+            class="cta-link"
+          >
+            Crie sua conta
+          </router-link>
+        </div>
       </div>
 
       <div>
-        <h1>Quer agendar um horário para o seu pet?</h1>
-        <router-link
-          to="/agendamento"
-          class="cta-link"
-        >
-          Agende agora
-        </router-link>
-      </div>
+        <div>
+          <h1>Quer agendar um horário para o seu pet?</h1>
+          <router-link
+            to="/agendamento"
+            class="cta-link"
+          >
+            Agende agora
+          </router-link>
+        </div>
 
-      <div>
-        <h1>Quer criar uma conta e ficar por dentro de tudo?</h1>
-        <router-link
-          to="/cadastro"
-          class="cta-link"
-        >
-          Crie sua conta
-        </router-link>
-      </div>
-
-      <div>
-        <h1>Já tem cadastro? Faça login</h1>
-        <router-link
-          to="/login"
-          class="cta-link"
-        >
-          Faça login
-        </router-link>
+        <div>
+          <h1>Já tem cadastro? Faça login</h1>
+          <router-link
+            to="/login"
+            class="cta-link"
+          >
+            Faça login
+          </router-link>
+        </div>
       </div>
     </section>
   </div>
@@ -193,12 +197,19 @@ ul li strong {
 
 .call-to-action {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 40px;
   background-color: #f5f5f5;
-  padding: 20px;
   border-radius: 10px;
   text-align: center;
+}
+
+.call-to-action div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
 }
 
 .cta-link {
