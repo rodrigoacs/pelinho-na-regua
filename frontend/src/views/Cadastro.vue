@@ -4,7 +4,7 @@
       <div class="register-form">
         <h2>Crie sua conta grátis</h2>
         <p>Preencha seus dados</p>
-        <form @submit.prevent="handleLogin">
+        <form @submit.prevent="handleRegister">
           <div class="input-group">
             <i class="fa fa-user"></i>
             <input
@@ -24,7 +24,7 @@
             <i class="fa fa-lock"></i>
             <input
               placeholder="confirme a senha"
-              v-model="password"
+              v-model="passwordCheck"
             >
           </div>
           <button type="submit">CRIAR CONTA</button>
@@ -38,6 +38,42 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const username = ref('')
+const password = ref('')
+const passwordCheck = ref('')
+const router = useRouter()
+
+
+const handleRegister = () => {
+  if (password.value !== passwordCheck.value) {
+    alert('Senhas não conferem')
+    return
+  }
+
+  fetch('http://localhost:5140/api/Users/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username: username.value,
+      password: password.value
+    })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        alert(data.error)
+        return
+      }
+
+      alert('Usuário criado com sucesso')
+      router.push('/login')
+    })
+}
 
 </script>
 

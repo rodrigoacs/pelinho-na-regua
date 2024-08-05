@@ -43,10 +43,43 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const username = ref('')
+const password = ref('')
+const router = useRouter()
 
 function forgetPassword(e) {
   e.target.innerText = e.target.innerText === 'Esqueci a senha' ? 'Foda né? Sinto muito' : 'Esqueci a senha'
 }
+
+function handleLogin() {
+  fetch('http://localhost:5140/api/Users/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username: username.value,
+      password: password.value
+    })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        alert(data.error)
+        return
+      }
+
+      alert('Login feito com sucesso')
+      router.push('/')
+    })
+    .catch(error => {
+      console.error('Error:', error)
+      alert('Erro ao fazer login')
+    })
+};
 
 </script>
 
