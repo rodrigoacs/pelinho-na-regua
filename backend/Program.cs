@@ -19,6 +19,15 @@ builder.Services.AddCors(options =>
   });
 });
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+  options.ListenAnyIP(5000); // Configure Kestrel to listen on port 5000 for HTTP
+  options.ListenAnyIP(5001, listenOptions =>
+  {
+    listenOptions.UseHttps(); // Configure Kestrel to listen on port 5001 for HTTPS
+  });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,4 +45,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run("http://*:5000;https://*:5001");
+app.Run();
