@@ -55,7 +55,7 @@ function forgetPassword(e) {
 }
 
 function handleLogin() {
-  fetch('http://localhost:5000/api/Users/login', {
+  fetch('http://195.200.2.145:5000/api/Users/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
