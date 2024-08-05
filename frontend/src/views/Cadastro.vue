@@ -53,7 +53,7 @@ const handleRegister = () => {
     return
   }
 
-  fetch('http://localhost:5140/api/Users/register', {
+  fetch('http://localhost:5000/api/Users/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

@@ -36,4 +36,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+app.Run("http://*:5000;https://*:5001");
