@@ -84,7 +84,7 @@ const userId = localStorage.getItem('userId')
 
 async function fetchUserProfile() {
   try {
-    const response = await fetch(`http://localhost:5000/api/UserProfiles/${userId}`)
+    const response = await fetch(`http://195.200.2.145:5000/api/UserProfiles/${userId}`)
     const data = await response.json()
     if (response.ok) {
       user.value = data
@@ -104,7 +104,7 @@ onMounted(() => {
 
 async function handleSubmit() {
   try {
-    const response = await fetch(`http://localhost:5000/api/UserProfiles/${userId}`, {
+    const response = await fetch(`http://195.200.2.145:5000/api/UserProfiles/${userId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -126,7 +126,7 @@ async function handleSubmit() {
 
 async function createUserProfile() {
   try {
-    const response = await fetch('http://localhost:5000/api/UserProfiles', {
+    const response = await fetch('http://195.200.2.145:5000/api/UserProfiles', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
