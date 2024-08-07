@@ -56,7 +56,7 @@ function forgetPassword(e) {
 
 async function handleLogin() {
   try {
-    const response = await fetch('http://195.2.200.145:5000/api/Users/login', {
+    const response = await fetch('http://localhost:5000/api/Users/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -67,6 +67,9 @@ async function handleLogin() {
       })
     })
     const data = await response.json()
+
+    console.log('Data:', data)
+
 
     if (response.status !== 200 || data.error) {
       alert(data.error)
