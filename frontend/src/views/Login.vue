@@ -54,33 +54,34 @@ function forgetPassword(e) {
   e.target.innerText = e.target.innerText === 'Esqueci a senha' ? 'Foda né? Sinto muito' : 'Esqueci a senha'
 }
 
-function handleLogin() {
-  fetch('http://195.200.2.145:5000/api/Users/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      username: username.value,
-      password: password.value
+async function handleLogin() {
+  try {
+    const response = await fetch('http://localhost:5000/api/Users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username.value,
+        password: password.value
+      })
     })
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        alert(data.error)
-        return
-      }
+    const data = await response.json()
 
-      alert('Login feito com sucesso')
-      router.push('/')
-    })
-    .catch(error => {
-      console.error('Error:', error)
-      alert('Erro ao fazer login')
-    })
-};
+    if (response.status !== 200 || data.error) {
+      alert(data.error)
+      return
+    }
 
+    localStorage.setItem('userId', data.id)
+
+    alert('Login feito com sucesso')
+    router.push('/')
+  } catch (error) {
+    console.error('Error:', error)
+    alert('Erro ao fazer login')
+  }
+}
 </script>
 
 <style scoped>
@@ -151,7 +152,12 @@ function handleLogin() {
   background-color: #854204;
   color: #ffffff;
   border: none;
+  cursor: pointer;
   border-radius: 5px;
+}
+
+.login-form button:hover {
+  background-color: #6a3403;
 }
 
 .footer {

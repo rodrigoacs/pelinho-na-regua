@@ -35,6 +35,13 @@
     >
       LOGIN
     </router-link>
+    <router-link
+      to="/perfil"
+      class="nav-link"
+    >
+      PERFIL
+    </router-link>
+
   </div>
 </template>
 

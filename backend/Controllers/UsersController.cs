@@ -28,7 +28,7 @@ namespace backend.Controllers
     }
 
     [HttpPost("login")]
-    public IActionResult Login(User user)
+    public IActionResult Login([FromBody] User user)
     {
       var existingUser = _context.Users.FirstOrDefault(u => u.Username == user.Username);
       if (existingUser == null || !BCrypt.Net.BCrypt.Verify(user.Password, existingUser.Password))
@@ -36,7 +36,7 @@ namespace backend.Controllers
         return Unauthorized(new { error = "Usuario ou senha inválidos" });
       }
 
-      return Ok(new { message = "Logado com sucesso" });
+      return Ok(new { message = "Logado com sucesso", id = existingUser.Id });
     }
 
   }
