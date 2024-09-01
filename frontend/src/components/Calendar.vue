@@ -5,22 +5,25 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
+const userId = localStorage.getItem('userId')
+
 const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: 'timeGridWeek',
   events: [],
-  editable: true,
+  editable: false,
+  droppable: false,
+  eventStartEditable: false,
+  eventDurationEditable: false,
   selectable: true,
   dateClick: handleDateClick,
   eventClick: handleEventClick,
-  eventDrop: handleEventDrop,
-  eventResize: handleEventResize,
   weekends: false,
   allDaySlot: false,
   locale: 'pt-br',
@@ -38,31 +41,30 @@ const calendarOptions = ref({
   },
   slotMinTime: '08:00:00',
   slotMaxTime: '18:00:00',
-})
+  datesSet: applyEventStyles,
 
-const userId = localStorage.getItem('userId')
+})
 
 async function fetchEvents() {
   try {
     const response = await fetch('http://195.200.2.145:5000/api/Events')
     const data = await response.json()
 
-    // Verifique se o data é um array e adicione os eventos ao calendário
     if (Array.isArray(data)) {
       calendarOptions.value.events = data.map(event => ({
         id: event.id,
-        title: event.title,
+        title: event.userId === parseInt(userId) ? event.title : 'Não disponível', // Eventos de outros usuários são exibidos como "Não disponível"
         start: event.startTime,
         end: event.endTime,
-        editable: event.userId === parseInt(userId), // Apenas eventos do usuário logado são editáveis
-        className: event.userId === parseInt(userId) ? 'user-event' : 'booked-event', // Diferenciar eventos
-        extendedProps: { userId: event.userId }  // Adicionando o userId aos extendedProps
+        className: event.userId === parseInt(userId) ? 'user-event' : 'booked-event',
+        extendedProps: { userId: event.userId }
       }))
     }
   } catch (error) {
     console.error('Erro ao buscar eventos:', error)
   }
 }
+
 
 function isTimeSlotAvailable(startTime, endTime) {
   const start = new Date(startTime)
@@ -99,7 +101,6 @@ function handleDateClick(info) {
   }
 }
 
-// Função para lidar com o clique em um evento
 function handleEventClick(info) {
   const eventUserId = info.event.extendedProps.userId
   console.log(eventUserId, userId)
@@ -114,7 +115,6 @@ function handleEventClick(info) {
   }
 }
 
-// Função para criar um novo evento no backend
 async function createEvent(event) {
   try {
     event.startTime = new Date(event.start).toISOString()
@@ -130,26 +130,25 @@ async function createEvent(event) {
 
     const createdEvent = await response.json()
 
-    calendarOptions.value.events = data.map(event => ({
-      id: event.id,
-      title: event.title,
-      start: event.startTime,
-      end: event.endTime,
-      editable: event.userId === parseInt(userId), // Apenas eventos do usuário logado são editáveis
-      className: event.userId === parseInt(userId) ? 'user-event' : 'booked-event', // Diferenciar eventos
-      extendedProps: { userId: event.userId }  // Adicionando o userId aos extendedProps
-    }))
-
-
     if (response.ok) {
+      calendarOptions.value.events.push({
+        id: createdEvent.id,
+        title: createdEvent.userId === parseInt(userId) ? createdEvent.title : 'Não disponível',
+        start: createdEvent.startTime,
+        end: createdEvent.endTime,
+        editable: createdEvent.userId === parseInt(userId),
+        className: createdEvent.userId === parseInt(userId) ? 'user-event' : 'booked-event',
+        extendedProps: { userId: createdEvent.userId }
+      })
+
       await fetchEvents()
+      applyEventStyles()
     }
   } catch (error) {
     console.error('Erro ao criar evento:', error)
   }
 }
 
-// Função para deletar um evento do backend
 async function deleteEvent(eventId) {
   try {
     const response = await fetch(`http://195.200.2.145:5000/api/Events/${eventId}`, {
@@ -166,73 +165,36 @@ async function deleteEvent(eventId) {
   }
 }
 
-// Função para lidar com o movimento de um evento
-async function handleEventDrop(info) {
-  const updatedEvent = {
-    id: info.event.id,
-    title: info.event.title,
-    start: info.event.start.toISOString(),
-    end: info.event.end ? info.event.end.toISOString() : info.event.start.toISOString(),
-  }
-  updateEvent(updatedEvent)
-}
-
-// Função para lidar com o redimensionamento de um evento
-async function handleEventResize(info) {
-  const updatedEvent = {
-    id: info.event.id,
-    title: info.event.title,
-    start: info.event.start.toISOString(),
-    end: info.event.end.toISOString(),
-  }
-  updateEvent(updatedEvent)
-}
-
-// Função para atualizar um evento no backend
-async function updateEvent(event) {
-  try {
-    const response = await fetch(`http://195.200.2.145:5000/api/Events/${event.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(event),
+function applyEventStyles() {
+  setTimeout(() => {
+    document.querySelectorAll('.fc-event.booked-event').forEach(event => {
+      event.style.backgroundColor = '#da0000'
+      event.style.borderColor = '#da0000'
+      event.style.cursor = 'not-allowed'
+      event.style.opacity = 0.5
     })
 
-    if (!response.ok) {
-      console.error('Erro ao atualizar evento:', await response.text())
-    }
-  } catch (error) {
-    console.error('Erro ao atualizar evento:', error)
-  }
-}
-
-function setEventsColors() {
-  document.querySelectorAll('.fc-event.booked-event').forEach(event => {
-    event.style.backgroundColor = '#da0000'
-    event.style.borderColor = '#da0000'
-    event.style.cursor = 'not-allowed'
-    event.style.opacity = 0.5
-  })
-
-  document.querySelectorAll('.fc-event.user-event').forEach(event => {
-    event.style.backgroundColor = '#00ac00'
-    event.style.borderColor = '#00ac00'
-  })
-}
-
-// Chama a função para buscar os eventos quando o componente é montado
-onMounted(() => {
-  fetchEvents()
-  setTimeout(() => {
-    setEventsColors()
+    document.querySelectorAll('.fc-event.user-event').forEach(event => {
+      event.style.backgroundColor = '#00ac00'
+      event.style.borderColor = '#00ac00'
+    })
   }, 100)
-})
+}
+
+onMounted(() => {
+  fetchEvents().then(() => applyEventStyles())
+
+  watch(() => calendarOptions.value.events, (newVal, oldVal) => {
+    applyEventStyles()
+  })
+});
+
+
 </script>
 
 <style scoped>
 .calendar-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: auto;
   padding: 20px;
   background-color: #f5f5f5;
