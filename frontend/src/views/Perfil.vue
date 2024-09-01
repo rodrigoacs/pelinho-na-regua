@@ -3,7 +3,7 @@
     <h1>Perfil do Usuário</h1>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
-        <label for="fullName">*Nome Completo</label>
+        <label for="fullName">Nome Completo</label>
         <input
           type="text"
           id="fullName"
@@ -21,7 +21,7 @@
       </div>
       <div class="address-group">
         <div class="form-group">
-          <label for="street">*Rua, Avenida...</label>
+          <label for="street">Rua, Avenida...</label>
           <input
             type="text"
             id="street"
@@ -62,13 +62,28 @@
           />
         </div>
       </div>
-      <button type="submit">Salvar</button>
+      <button
+        type="submit"
+        class="button"
+      >Salvar</button>
     </form>
+
+    <button
+      @click="showAddPetModal = true"
+      class="button add-pet-button"
+    >Adicionar Pet</button>
+
+    <!-- Passa o userId para o componente PetList -->
+    <PetList :userId="userId" />
+
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import PetList from '@/components/PetList.vue'
+
+const showAddPetModal = ref(false)
 
 const user = ref({
   fullName: '',
@@ -149,6 +164,7 @@ async function createUserProfile() {
 </script>
 
 <style scoped>
+/* Estilos gerais do container */
 .profile-container {
   background-color: #f5f5f5;
   padding: 20px;
@@ -157,14 +173,53 @@ async function createUserProfile() {
   margin: auto;
 }
 
-h1 {
-  text-align: center;
-  color: #b5651d;
+/* Estilo do botão */
+.button {
+  background-color: #b5651d;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  margin-top: 20px;
 }
 
-form {
+.button:hover {
+  background-color: #94410b;
+}
+
+/* Estilos do modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 800px;
+  width: 100%;
+}
+
+h1 {
+  color: #8b4513;
+  text-align: center;
+}
+
+p {
+  color: #8b4513;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .form-group {
@@ -173,11 +228,12 @@ form {
 
 .form-group label {
   display: block;
-  color: #b5651d;
+  color: #8b4513;
   margin-bottom: 5px;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 8px;
   border-radius: 5px;
@@ -195,17 +251,17 @@ form {
   min-width: calc(33% - 10px);
 }
 
-button {
-  background-color: #b5651d;
-  color: white;
+.cancel-button {
+  background-color: #ccc;
+  color: #333;
   border: none;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  margin-top: 10px;
 }
 
-button:hover {
-  background-color: #94410b;
+.cancel-button:hover {
+  background-color: #aaa;
 }
 </style>
