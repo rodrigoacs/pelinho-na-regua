@@ -48,7 +48,9 @@ defineProps({
 .product-image {
   max-width: 100%;
   height: auto;
+  max-height: 200px;
   margin-bottom: 10px;
+  object-fit: scale-down;
 }
 
 .product-name {
